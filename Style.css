@@ -1,80 +1,130 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+const player = document.getElementById('player');
+const scoreDisplay = document.getElementById('score');
+const levelDisplay = document.getElementById('level');
+let score = 0;
+let level = 1;
+let playerSpeed = 20;
+let snowflakes = [];
+let enemies = [];
+let gameInterval;
+let enemyInterval;
+
+function createSnowflake() {
+  let snowflake = document.createElement('div');
+  snowflake.classList.add('snowflake');
+  snowflake.style.left = `${Math.random() * 380}px`;
+  snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+  document.querySelector('.game-container').appendChild(snowflake);
+  snowflakes.push(snowflake);
 }
 
-body {
-  background-color: #87CEEB;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  overflow: hidden;
+function createEnemy() {
+  let enemy = document.createElement('div');
+  enemy.classList.add('enemy');
+  enemy.style.left = `${Math.random() * 380}px`;
+  enemy.style.animationDuration = `${Math.random() * 4 + 3}s`;
+  document.querySelector('.game-container').appendChild(enemy);
+  enemies.push(enemy);
 }
 
-.game-container {
-  position: relative;
-  width: 400px;
-  height: 600px;
-  background-color: #f0f8ff;
-  border: 2px solid #000;
-  overflow: hidden;
+function moveSnowflakes() {
+  snowflakes.forEach(snowflake => {
+    let snowflakePosition = snowflake.offsetTop;
+    snowflakePosition += 5;
+    snowflake.style.top = `${snowflakePosition}px`;
+
+    if (snowflakePosition >= 600) {
+      snowflake.remove();
+      snowflakes = snowflakes.filter(item => item !== snowflake);
+    }
+    
+    if (checkCollision(snowflake)) {
+      score++;
+      scoreDisplay.textContent = `Score: ${score}`;
+      snowflake.remove();
+      snowflakes = snowflakes.filter(item => item !== snowflake);
+    }
+  });
 }
 
-#score, #level {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  font-size: 20px;
-  color: #000;
-  font-weight: bold;
+function moveEnemies() {
+  enemies.forEach(enemy => {
+    let enemyPosition = enemy.offsetTop;
+    enemyPosition += 5;
+    enemy.style.top = `${enemyPosition}px`;
+
+    if (enemyPosition >= 600) {
+      enemy.remove();
+      enemies = enemies.filter(item => item !== enemy);
+    }
+
+    if (checkEnemyCollision(enemy)) {
+      endGame();
+    }
+  });
 }
 
-#player {
-  position: absolute;
-  bottom: 10px;
-  left: 180px;
-  width: 40px;
-  height: 40px;
-  background-color: blue;
-  border-radius: 50%;
-}
+function checkCollision(snowflake) {
+  const snowflakeRect = snowflake.getBoundingClientRect();
+  const playerRect = player.getBoundingClientRect();
 
-.snowflake {
-  position: absolute;
-  top: 0;
-  width: 10px;
-  height: 10px;
-  background-color: white;
-  border-radius: 50%;
-  animation: fall linear infinite;
-}
-
-@keyframes fall {
-  0% {
-    top: -10px;
+  if (snowflakeRect.bottom >= playerRect.top && snowflakeRect.left >= playerRect.left && snowflakeRect.right <= playerRect.right) {
+    return true;
   }
-  100% {
-    top: 600px;
+  return false;
+}
+
+function checkEnemyCollision(enemy) {
+  const enemyRect = enemy.getBoundingClientRect();
+  const playerRect = player.getBoundingClientRect();
+
+  if (enemyRect.bottom >= playerRect.top && enemyRect.left >= playerRect.left && enemyRect.right <= playerRect.right) {
+    return true;
+  }
+  return false;
+}
+
+function movePlayer(e) {
+  const playerRect = player.getBoundingClientRect();
+  
+  if (e.key === 'ArrowLeft' && playerRect.left > 0) {
+    player.style.left = `${playerRect.left - playerSpeed}px`;
+  }
+  if (e.key === 'ArrowRight' && playerRect.right < 400) {
+    player.style.left = `${playerRect.left + playerSpeed}px`;
   }
 }
 
-.enemy {
-  position: absolute;
-  top: 0;
-  width: 40px;
-  height: 40px;
-  background-color: red;
-  border-radius: 50%;
-  animation: enemyFall linear infinite;
+function updateLevel() {
+  if (score >= level * 10) {
+    level++;
+    levelDisplay.textContent = `Level: ${level}`;
+    if (level % 5 === 0) {
+      createEnemy();
+    }
+  }
 }
 
-@keyframes enemyFall {
-  0% {
-    top: -40px;
-  }
-  100% {
-    top: 600px;
-  }
+function endGame() {
+  clearInterval(gameInterval);
+  clearInterval(enemyInterval);
+  alert(`Game Over! Your final score is ${score}`);
 }
+
+function startGame() {
+  gameInterval = setInterval(() => {
+    createSnowflake();
+    moveSnowflakes();
+    updateLevel();
+  }, 500);
+
+  enemyInterval = setInterval(() => {
+    if (level % 5 === 0) {
+      createEnemy();
+    }
+    moveEnemies();
+  }, 2000);
+}
+
+document.addEventListener('keydown', movePlayer);
+startGame();
