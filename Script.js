@@ -10,7 +10,7 @@ let gameInterval;
 let enemyInterval;
 
 function createSnowflake() {
-  let snowflake = document.createElement('div');
+  const snowflake = document.createElement('div');
   snowflake.classList.add('snowflake');
   snowflake.style.left = `${Math.random() * 380}px`;
   snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
@@ -19,7 +19,7 @@ function createSnowflake() {
 }
 
 function createEnemy() {
-  let enemy = document.createElement('div');
+  const enemy = document.createElement('div');
   enemy.classList.add('enemy');
   enemy.style.left = `${Math.random() * 380}px`;
   enemy.style.animationDuration = `${Math.random() * 4 + 3}s`;
@@ -29,15 +29,14 @@ function createEnemy() {
 
 function moveSnowflakes() {
   snowflakes.forEach(snowflake => {
-    let snowflakePosition = snowflake.offsetTop;
-    snowflakePosition += 5;
+    const snowflakePosition = snowflake.offsetTop + 5;
     snowflake.style.top = `${snowflakePosition}px`;
 
     if (snowflakePosition >= 600) {
       snowflake.remove();
       snowflakes = snowflakes.filter(item => item !== snowflake);
     }
-    
+
     if (checkCollision(snowflake)) {
       score++;
       scoreDisplay.textContent = `Score: ${score}`;
@@ -49,8 +48,7 @@ function moveSnowflakes() {
 
 function moveEnemies() {
   enemies.forEach(enemy => {
-    let enemyPosition = enemy.offsetTop;
-    enemyPosition += 5;
+    const enemyPosition = enemy.offsetTop + 5;
     enemy.style.top = `${enemyPosition}px`;
 
     if (enemyPosition >= 600) {
@@ -64,34 +62,29 @@ function moveEnemies() {
   });
 }
 
-function checkCollision(snowflake) {
-  const snowflakeRect = snowflake.getBoundingClientRect();
+function checkCollision(item) {
+  const itemRect = item.getBoundingClientRect();
   const playerRect = player.getBoundingClientRect();
 
-  if (snowflakeRect.bottom >= playerRect.top && snowflakeRect.left >= playerRect.left && snowflakeRect.right <= playerRect.right) {
-    return true;
-  }
-  return false;
+  return (
+    itemRect.bottom >= playerRect.top &&
+    itemRect.left >= playerRect.left &&
+    itemRect.right <= playerRect.right
+  );
 }
 
 function checkEnemyCollision(enemy) {
-  const enemyRect = enemy.getBoundingClientRect();
-  const playerRect = player.getBoundingClientRect();
-
-  if (enemyRect.bottom >= playerRect.top && enemyRect.left >= playerRect.left && enemyRect.right <= playerRect.right) {
-    return true;
-  }
-  return false;
+  return checkCollision(enemy);
 }
 
 function movePlayer(e) {
   const playerRect = player.getBoundingClientRect();
-  
+
   if (e.key === 'ArrowLeft' && playerRect.left > 0) {
-    player.style.left = `${playerRect.left - playerSpeed}px`;
+    player.style.left = `${player.offsetLeft - playerSpeed}px`;
   }
   if (e.key === 'ArrowRight' && playerRect.right < 400) {
-    player.style.left = `${playerRect.left + playerSpeed}px`;
+    player.style.left = `${player.offsetLeft + playerSpeed}px`;
   }
 }
 
@@ -99,9 +92,7 @@ function updateLevel() {
   if (score >= level * 10) {
     level++;
     levelDisplay.textContent = `Level: ${level}`;
-    if (level % 5 === 0) {
-      createEnemy();
-    }
+    playerSpeed += 5;
   }
 }
 
