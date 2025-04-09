@@ -7,31 +7,21 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="gameContainer">
-    <canvas id="gameCanvas"></canvas>
-
-    <!-- Start Button -->
-    <div id="startScreen">
-      <h1>Crazy Snake</h1>
-      <button id="startBtn">Start Game</button>
-    </div>
-
-    <!-- Game Over -->
+  <div class="game-container">
+    <h1>Crazy Snake 🐍</h1>
+    <button id="startBtn">Start Game</button>
+    <div id="gameBoard" class="board"></div>
     <div id="gameOver" class="hidden">
-      <h1>Game Over</h1>
+      <h2>Game Over</h2>
       <button id="restartBtn">Restart</button>
     </div>
-
-    <!-- Mobile Controls -->
     <div class="controls">
-      <div class="row">
-        <button class="btn" id="up">⬆</button>
+      <button onclick="changeDirection('up')">⬆️</button>
+      <div>
+        <button onclick="changeDirection('left')">⬅️</button>
+        <button onclick="changeDirection('right')">➡️</button>
       </div>
-      <div class="row">
-        <button class="btn" id="left">⬅</button>
-        <button class="btn" id="down">⬇</button>
-        <button class="btn" id="right">➡</button>
-      </div>
+      <button onclick="changeDirection('down')">⬇️</button>
     </div>
   </div>
 
