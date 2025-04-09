@@ -1,117 +1,109 @@
-const player = document.getElementById('player');
-const scoreDisplay = document.getElementById('score');
-const levelDisplay = document.getElementById('level');
-let score = 0;
-let level = 1;
-let playerSpeed = 20;
-let snowflakes = [];
-let enemies = [];
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+const gridSize = 20;
+const canvasSize = 600;
+canvas.width = canvasSize;
+canvas.height = canvasSize;
+
+let snake = [{ x: 160, y: 160 }];
+let direction = 'right';
+let food = {};
+let gameOver = false;
+let gameStarted = false;
 let gameInterval;
-let enemyInterval;
 
-function createSnowflake() {
-    const snowflake = document.createElement('div');
-    snowflake.classList.add('snowflake');
-    snowflake.style.left = `${Math.random() * 380}px`;
-    snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
-    document.querySelector('.game-container').appendChild(snowflake);
-    snowflakes.push(snowflake);
+function generateFood() {
+  food = {
+    x: Math.floor(Math.random() * (canvasSize / gridSize)) * gridSize,
+    y: Math.floor(Math.random() * (canvasSize / gridSize)) * gridSize
+  };
 }
 
-function createEnemy() {
-    const enemy = document.createElement('div');
-    enemy.classList.add('enemy');
-    enemy.style.left = `${Math.random() * 380}px`;
-    enemy.style.animationDuration = `${Math.random() * 4 + 3}s`;
-    document.querySelector('.game-container').appendChild(enemy);
-    enemies.push(enemy);
+function drawGame() {
+  ctx.clearRect(0, 0, canvasSize, canvasSize);
+
+  snake.forEach((part, i) => {
+    ctx.fillStyle = i === 0 ? "#00FF00" : "#00CC99";
+    ctx.fillRect(part.x, part.y, gridSize, gridSize);
+  });
+
+  ctx.fillStyle = "#FF0066";
+  ctx.fillRect(food.x, food.y, gridSize, gridSize);
 }
 
-function moveSnowflakes() {
-    snowflakes.forEach(snowflake => {
-        const snowflakePosition = snowflake.offsetTop + 5;
-        snowflake.style.top = `${snowflakePosition}px`;
+function updateGame() {
+  if (gameOver) return;
 
-        if (snowflakePosition >= 600) {
-            snowflake.remove();
-            snowflakes = snowflakes.filter(item => item !== snowflake);
-        } else if (checkCollision(snowflake)) {
-            score++;
-            scoreDisplay.textContent = `Score: ${score}`;
-            snowflake.remove();
-            snowflakes = snowflakes.filter(item => item !== snowflake);
-        }
-    });
-}
+  const head = { ...snake[0] };
+  if (direction === 'up') head.y -= gridSize;
+  if (direction === 'down') head.y += gridSize;
+  if (direction === 'left') head.x -= gridSize;
+  if (direction === 'right') head.x += gridSize;
 
-function moveEnemies() {
-    enemies.forEach(enemy => {
-        const enemyPosition = enemy.offsetTop + 5;
-        enemy.style.top = `${enemyPosition}px`;
+  snake.unshift(head);
 
-        if (enemyPosition >= 600) {
-            enemy.remove();
-            enemies = enemies.filter(item => item !== enemy);
-        } else if (checkEnemyCollision(enemy)) {
-            endGame();
-        }
-    });
-}
+  if (head.x === food.x && head.y === food.y) {
+    generateFood();
+  } else {
+    snake.pop();
+  }
 
-function checkCollision(item) {
-    const itemRect = item.getBoundingClientRect();
-    const playerRect = player.getBoundingClientRect();
-
-    return (
-        itemRect.bottom >= playerRect.top &&
-        itemRect.left >= playerRect.left &&
-        itemRect.right <= playerRect.right
-    );
-}
-
-function checkEnemyCollision(enemy) {
-    return checkCollision(enemy);
-}
-
-function movePlayer(e) {
-    const playerRect = player.getBoundingClientRect();
-
-    if (e.key === 'ArrowLeft' && playerRect.left > 0) {
-        player.style.left = `${player.offsetLeft - playerSpeed}px`;
-    }
-    if (e.key === 'ArrowRight' && playerRect.right < 400) {
-        player.style.left = `${player.offsetLeft + playerSpeed}px`;
-    }
-}
-
-function updateLevel() {
-    if (score >= level * 10) {
-        level++;
-        levelDisplay.textContent = `Level: ${level}`;
-        playerSpeed += 5;
-    }
-}
-
-function endGame() {
+  if (
+    head.x < 0 || head.x >= canvasSize ||
+    head.y < 0 || head.y >= canvasSize ||
+    snake.slice(1).some(seg => seg.x === head.x && seg.y === head.y)
+  ) {
     clearInterval(gameInterval);
-    clearInterval(enemyInterval);
-    alert(`Game Over! Your final score is ${score}`);
+    gameOver = true;
+    document.getElementById('gameOver').classList.remove('hidden');
+  }
+
+  drawGame();
 }
+
+// Keyboard Controls
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowUp' && direction !== 'down') direction = 'up';
+  if (e.key === 'ArrowDown' && direction !== 'up') direction = 'down';
+  if (e.key === 'ArrowLeft' && direction !== 'right') direction = 'left';
+  if (e.key === 'ArrowRight' && direction !== 'left') direction = 'right';
+});
+
+// Touch Buttons
+document.getElementById('up').addEventListener('click', () => {
+  if (direction !== 'down') direction = 'up';
+});
+document.getElementById('down').addEventListener('click', () => {
+  if (direction !== 'up') direction = 'down';
+});
+document.getElementById('left').addEventListener('click', () => {
+  if (direction !== 'right') direction = 'left';
+});
+document.getElementById('right').addEventListener('click', () => {
+  if (direction !== 'left') direction = 'right';
+});
+
+// Start Game Button
+document.getElementById('startBtn').addEventListener('click', () => {
+  startGame();
+});
+
+// Restart Game Button
+document.getElementById('restartBtn').addEventListener('click', () => {
+  startGame();
+});
 
 function startGame() {
-    gameInterval = setInterval(() => {
-        createSnowflake();
-        moveSnowflakes();
-        updateLevel();
-    }, 500);
+  snake = [{ x: 160, y: 160 }];
+  direction = 'right';
+  gameOver = false;
+  gameStarted = true;
+  generateFood();
+  drawGame();
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('gameOver').classList.add('hidden');
 
-    enemyInterval = setInterval(() => {
-        if (level % 5 === 0) {
-            createEnemy();
-        }
-        moveEnemies();
-    }, 2000);
+  clearInterval(gameInterval);
+  gameInterval = setInterval(updateGame, 200); // Slow for mobile
 }
-
-document.addEventListener('keydown', movePlayer);
-startGame();

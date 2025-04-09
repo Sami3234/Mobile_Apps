@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ice Age Battle</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crazy Snake Game</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="game-container">
-        <div id="score">Score: 0</div>
-        <div id="level">Level: 1</div>
-        <div id="player" class="player"></div>
+  <div id="gameContainer">
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Start Button -->
+    <div id="startScreen">
+      <h1>Crazy Snake</h1>
+      <button id="startBtn">Start Game</button>
     </div>
-    <script src="script.js"></script>
+
+    <!-- Game Over -->
+    <div id="gameOver" class="hidden">
+      <h1>Game Over</h1>
+      <button id="restartBtn">Restart</button>
+    </div>
+
+    <!-- Mobile Controls -->
+    <div class="controls">
+      <div class="row">
+        <button class="btn" id="up">⬆</button>
+      </div>
+      <div class="row">
+        <button class="btn" id="left">⬅</button>
+        <button class="btn" id="down">⬇</button>
+        <button class="btn" id="right">➡</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
