@@ -37,6 +37,11 @@ body {
     transform: translateX(-50%);
 }
 
+.player:hover {
+    background-color: lightblue; /* Change color on hover */
+    transition: background-color 0.3s ease;
+}
+
 .snowflake, .enemy {
     width: 20px;
     height: 20px;
