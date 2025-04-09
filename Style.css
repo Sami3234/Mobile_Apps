@@ -1,64 +1,209 @@
-body {
-  font-family: 'Arial', sans-serif;
-  text-align: center;
-  background-color: #eaffea;
+* {
   margin: 0;
   padding: 0;
-  color: #006400;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-h1 {
-  font-size: 2.5rem;
-  margin-top: 30px;
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom right, #1b5e20, #4caf50);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: white;
 }
 
-#start-screen, #game-container {
+/* Start Screen */
+#start-screen {
+  text-align: center;
   padding: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+#start-screen h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#high-score {
+  margin: 20px 0;
+  font-size: 1.5rem;
+}
+
+.controls-info {
+  margin: 15px 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.difficulty-selector {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.difficulty-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.difficulty-btn.active {
+  background: white;
+  color: #2e7d32;
+  transform: scale(1.1);
+}
+
+button {
+  background: white;
+  color: #2e7d32;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
 }
 
 #game-container {
   display: none;
+  width: 100vw;
+  height: 100vh;
   position: relative;
-  min-height: 400px;
 }
 
 #header {
   display: flex;
   justify-content: space-around;
+  padding: 15px;
   font-size: 1.2rem;
-  margin-bottom: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
 }
 
 #mirchi-container {
-  position: relative;
-  height: 300px;
-  overflow: hidden;
-  border: 2px dashed #228B22;
-}
-
-.mirchi, .bomb {
   position: absolute;
-  cursor: pointer;
-  width: 50px;
-  transition: top 0.3s linear;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
 }
 
-#game-over {
+#keyboard-cursor {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #ffeb3b;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1000;
+  transition: transform 0.1s ease;
+  box-shadow: 0 0 10px #ffeb3b;
+}
+
+#keyboard-cursor::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: #ffeb3b;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.mirchi {
+  position: absolute;
+  font-size: 2rem;
+  animation: fall 4s linear forwards;
+  user-select: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.mirchi:hover, .mirchi.keyboard-selected {
+  transform: scale(1.2);
+}
+
+.bomb {
+  animation: fall 4s linear forwards, shake 0.5s infinite;
+}
+
+#game-over, #pause-screen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.85);
   display: none;
-  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  backdrop-filter: blur(5px);
 }
 
-button {
-  padding: 10px 20px;
-  background-color: #32cd32;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-top: 15px;
+#game-over h2, #pause-screen h2 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #ff5252;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-button:hover {
-  background-color: #2e8b57;
+#pause-screen h2 {
+  color: #ffeb3b;
+}
+
+@keyframes fall {
+  from { top: -60px; }
+  to { top: 100vh; }
+}
+
+@keyframes shake {
+  0% { transform: rotate(-5deg); }
+  100% { transform: rotate(5deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  #start-screen h1 {
+    font-size: 2rem;
+  }
+  
+  .difficulty-selector {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .controls-info {
+    font-size: 0.8rem;
+  }
 }
