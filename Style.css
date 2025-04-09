@@ -1,104 +1,64 @@
-* {
+body {
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  background-color: #eaffea;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+  color: #006400;
 }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(to bottom right, #1b5e20, #4caf50);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  color: white;
-}
-
-/* Start Screen */
-#start-screen {
-  text-align: center;
-  padding: 20px;
-}
-
-#start-screen h1 {
+h1 {
   font-size: 2.5rem;
+  margin-top: 30px;
 }
 
-#high-score {
-  margin: 20px 0;
-  font-size: 1.5rem;
-}
-
-button {
-  background: white;
-  color: #2e7d32;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 30px;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  margin-top: 10px;
+#start-screen, #game-container {
+  padding: 20px;
 }
 
 #game-container {
   display: none;
-  width: 100vw;
-  height: 100vh;
   position: relative;
+  min-height: 400px;
 }
 
 #header {
   display: flex;
   justify-content: space-around;
-  padding: 10px;
   font-size: 1.2rem;
+  margin-bottom: 20px;
 }
 
 #mirchi-container {
-  position: absolute;
-  top: 60px;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: relative;
+  height: 300px;
   overflow: hidden;
+  border: 2px dashed #228B22;
 }
 
-.mirchi {
+.mirchi, .bomb {
   position: absolute;
-  font-size: 2rem;
-  animation: fall 4s linear forwards;
-  user-select: none;
   cursor: pointer;
-}
-
-.bomb {
-  animation: fall 4s linear forwards, shake 0.5s infinite;
+  width: 50px;
+  transition: top 0.3s linear;
 }
 
 #game-over {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0,0,0,0.85);
   display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
+  margin-top: 20px;
 }
 
-@keyframes fall {
-  from { top: -60px; }
-  to { top: 100vh; }
+button {
+  padding: 10px 20px;
+  background-color: #32cd32;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 15px;
 }
 
-@keyframes shake {
-  0% { transform: rotate(-5deg); }
-  100% { transform: rotate(5deg); }
+button:hover {
+  background-color: #2e8b57;
 }

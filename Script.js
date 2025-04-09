@@ -5,92 +5,88 @@ const gameContainer = document.getElementById("game-container");
 const mirchiContainer = document.getElementById("mirchi-container");
 const scoreDisplay = document.querySelector("#score span");
 const timerDisplay = document.querySelector("#timer span");
-const finalScoreDisplay = document.getElementById("final-score");
+const finalScore = document.getElementById("final-score");
+const highScoreEnd = document.getElementById("high-score-end");
+const highScoreTop = document.querySelector("#high-score span");
 const gameOverScreen = document.getElementById("game-over");
-const highScoreDisplay = document.querySelector("#high-score span");
-const highScoreEndDisplay = document.getElementById("high-score-end");
 
 let score = 0;
 let timeLeft = 30;
-let timer;
-let spawnInterval;
-let gameRunning = false;
-let highScore = localStorage.getItem("mirchiHighScore") || 0;
-highScoreDisplay.textContent = highScore;
+let highScore = localStorage.getItem("highScore") || 0;
+let gameInterval, mirchiInterval;
 
-startBtn.onclick = startGame;
-restartBtn.onclick = startGame;
+highScoreTop.textContent = highScore;
 
 function startGame() {
-  score = 0;
-  timeLeft = 30;
-  gameRunning = true;
-  updateDisplay();
-
   startScreen.style.display = "none";
   gameContainer.style.display = "block";
+  score = 0;
+  timeLeft = 30;
+  scoreDisplay.textContent = score;
+  timerDisplay.textContent = timeLeft;
   gameOverScreen.style.display = "none";
-  mirchiContainer.innerHTML = "";
 
-  timer = setInterval(() => {
-    timeLeft--;
-    updateDisplay();
-    if (timeLeft <= 0) endGame();
-  }, 1000);
-
-  spawnInterval = setInterval(spawnMirchi, 800);
+  gameInterval = setInterval(updateTimer, 1000);
+  mirchiInterval = setInterval(spawnItem, 800);
 }
 
-function spawnMirchi() {
-  const el = document.createElement("div");
-  const isBomb = Math.random() < 0.15;
-  el.className = "mirchi";
-  if (isBomb) {
-    el.classList.add("bomb");
-    el.textContent = "💣";
-  } else {
-    el.textContent = "🌶️";
+function updateTimer() {
+  timeLeft--;
+  timerDisplay.textContent = timeLeft;
+  if (timeLeft <= 0) {
+    endGame();
   }
+}
 
-  const left = Math.random() * (window.innerWidth - 50);
-  el.style.left = `${left}px`;
+function spawnItem() {
+  const item = document.createElement("img");
+  const isBomb = Math.random() < 0.2;
+  item.src = isBomb ? "images/bomb.png" : "images/mirch.jpg";
+  item.classList.add(isBomb ? "bomb" : "mirchi");
 
-  el.addEventListener("click", () => {
-    if (!gameRunning) return;
+  item.style.left = `${Math.random() * 90}%`;
+  item.style.top = "0px";
+  mirchiContainer.appendChild(item);
+
+  let falling = setInterval(() => {
+    let top = parseFloat(item.style.top);
+    item.style.top = `${top + 5}px`;
+    if (top > 300) {
+      clearInterval(falling);
+      item.remove();
+    }
+  }, 50);
+
+  item.addEventListener("click", () => {
+    clearInterval(falling);
     if (isBomb) {
       endGame();
     } else {
-      score += 5;
-      timeLeft += 2;
-      el.remove();
-      updateDisplay();
+      score += 1;
+      timeLeft += 1;
+      scoreDisplay.textContent = score;
+      item.remove();
     }
   });
-
-  mirchiContainer.appendChild(el);
-
-  setTimeout(() => {
-    if (el.parentNode) el.remove();
-  }, 5000);
-}
-
-function updateDisplay() {
-  scoreDisplay.textContent = score;
-  timerDisplay.textContent = timeLeft;
 }
 
 function endGame() {
-  gameRunning = false;
-  clearInterval(timer);
-  clearInterval(spawnInterval);
-  finalScoreDisplay.textContent = score;
+  clearInterval(gameInterval);
+  clearInterval(mirchiInterval);
+  mirchiContainer.innerHTML = "";
+
+  finalScore.textContent = score;
 
   if (score > highScore) {
     highScore = score;
-    localStorage.setItem("mirchiHighScore", highScore);
+    localStorage.setItem("highScore", highScore);
   }
 
-  highScoreDisplay.textContent = highScore;
-  highScoreEndDisplay.textContent = highScore;
-  gameOverScreen.style.display = "flex";
+  highScoreTop.textContent = highScore;
+  highScoreEnd.textContent = highScore;
+
+  gameOverScreen.style.display = "block";
 }
+
+startBtn.addEventListener("click", startGame);
+restartBtn.addEventListener("click", startGame);
