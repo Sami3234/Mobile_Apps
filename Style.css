@@ -1,42 +1,80 @@
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #87CEEB; /* Sky blue background */
-    overflow: hidden;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-#gameArea {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    background-color: #1E90FF; /* Ice Blue background */
+body {
+  background-color: #87CEEB;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.game-container {
+  position: relative;
+  width: 400px;
+  height: 600px;
+  background-color: #f0f8ff;
+  border: 2px solid #000;
+  overflow: hidden;
+}
+
+#score, #level {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+  color: #000;
+  font-weight: bold;
 }
 
 #player {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background-color: #0000FF; /* Player as blue square */
-    bottom: 0;
-    left: 50vw; /* Center horizontally */
-    border-radius: 50%;
+  position: absolute;
+  bottom: 10px;
+  left: 180px;
+  width: 40px;
+  height: 40px;
+  background-color: blue;
+  border-radius: 50%;
 }
 
-#enemy {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background-color: #FF0000; /* Enemy as red square */
-    top: 20%;
-    left: 30vw;
-    border-radius: 50%;
+.snowflake {
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 50%;
+  animation: fall linear infinite;
 }
 
-#snowball {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: white; /* Snowball as white circle */
-    border-radius: 50%;
-    display: none; /* Hidden initially */
+@keyframes fall {
+  0% {
+    top: -10px;
+  }
+  100% {
+    top: 600px;
+  }
+}
+
+.enemy {
+  position: absolute;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  background-color: red;
+  border-radius: 50%;
+  animation: enemyFall linear infinite;
+}
+
+@keyframes enemyFall {
+  0% {
+    top: -40px;
+  }
+  100% {
+    top: 600px;
+  }
 }
