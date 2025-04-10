@@ -1,74 +1,109 @@
-body {
+* {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to right, #38ef7d, #11998e);
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: radial-gradient(circle, #00ff99, #003366);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  font-family: 'Comic Sans MS', cursive;
 }
 
-.game-container {
+#gameContainer {
+  position: relative;
   text-align: center;
-  color: white;
+  width: 100%;
+  max-width: 600px;
 }
 
-.board {
-  display: grid;
-  grid-template-columns: repeat(20, 20px);
-  grid-template-rows: repeat(20, 20px);
-  gap: 2px;
-  margin: 20px auto;
-  background-color: #222;
-  padding: 10px;
-  border-radius: 10px;
+canvas {
+  background-color: #111;
+  border: 10px solid lime;
+  border-radius: 25px;
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
+  width: 100%;
+  height: auto;
 }
 
-.cell {
-  width: 20px;
-  height: 20px;
-  background-color: #333;
-  border-radius: 3px;
+#startScreen, #gameOver {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-shadow: 2px 2px 8px #000;
+  z-index: 2;
 }
 
-.snake {
-  background-color: #00ffcc;
-  box-shadow: 0 0 5px #00ffcc;
-}
-
-.food {
-  background-color: #ff4081;
-  border-radius: 50%;
-  box-shadow: 0 0 5px #ff4081;
+#startScreen h1 {
+  font-size: 40px;
+  margin-bottom: 20px;
+  color: #ff0066;
 }
 
 #startBtn, #restartBtn {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #ffffff;
+  padding: 14px 30px;
+  font-size: 18px;
+  background: #ff0066;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 12px;
   cursor: pointer;
+  box-shadow: 0 0 10px #fff;
 }
 
-.controls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 15px;
-}
-
-.controls button {
-  margin: 5px;
-  padding: 10px 20px;
-  font-size: 20px;
-  border-radius: 50%;
-  border: none;
-  background: #fff;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+#gameOver h1 {
+  font-size: 32px;
+  margin-bottom: 15px;
+  color: #ff0066;
 }
 
 .hidden {
   display: none;
+}
+
+.controls {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  margin: 5px 0;
+}
+
+.btn {
+  background: #ff3399;
+  border: 2px solid #fff;
+  color: white;
+  font-size: 24px;
+  padding: 15px 20px;
+  margin: 5px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px #ff66cc;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #ff66cc;
+  transform: scale(1.1);
+}
+
+@media (max-width: 600px) {
+  canvas {
+    height: 90vw;
+  }
+
+  .btn {
+    padding: 12px 16px;
+    font-size: 20px;
+  }
 }

@@ -1,30 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crazy Snake Game</title>
-  <link rel="stylesheet" href="Style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <div class="game-container">
-    <h1>Crazy Snake 🐍</h1>
-    <button id="startBtn">Start Game</button>
-    <div id="gameBoard" class="board"></div>
+  <div id="gameContainer">
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Start Button -->
+    <div id="startScreen">
+      <h1>Crazy Snake</h1>
+      <button id="startBtn">Start Game</button>
+    </div>
+
+    <!-- Game Over -->
     <div id="gameOver" class="hidden">
-      <h2>Game Over</h2>
+      <h1>Game Over</h1>
       <button id="restartBtn">Restart</button>
     </div>
+
+    <!-- Mobile Controls -->
     <div class="controls">
-      <button onclick="changeDirection('up')">⬆️</button>
-      <div>
-        <button onclick="changeDirection('left')">⬅️</button>
-        <button onclick="changeDirection('right')">➡️</button>
+      <div class="row">
+        <button class="btn" id="up">⬆</button>
       </div>
-      <button onclick="changeDirection('down')">⬇️</button>
+      <div class="row">
+        <button class="btn" id="left">⬅</button>
+        <button class="btn" id="down">⬇</button>
+        <button class="btn" id="right">➡</button>
+      </div>
     </div>
   </div>
 
-  <script src="Script.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
