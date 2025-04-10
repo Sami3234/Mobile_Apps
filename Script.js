@@ -42,6 +42,7 @@ function moveSnake() {
   ) {
     clearInterval(interval);
     gameOver.classList.remove("hidden");
+    restartBtn.classList.remove("hidden");
     return;
   }
 
@@ -57,17 +58,23 @@ function moveSnake() {
 }
 
 function changeDirection(dir) {
-  if (dir === "up" && direction.y === 0) direction = { x: 0, y: -1 };
-  if (dir === "down" && direction.y === 0) direction = { x: 0, y: 1 };
-  if (dir === "left" && direction.x === 0) direction = { x: -1, y: 0 };
-  if (dir === "right" && direction.x === 0) direction = { x: 1, y: 0 };
+  if (
+    (dir === "left" && direction.x !== 1) ||
+    (dir === "right" && direction.x !== -1) ||
+    (dir === "up" && direction.y !== 1) ||
+    (dir === "down" && direction.y !== -1)
+  ) {
+    direction = dir === "up" ? { x: 0, y: -1 } :
+                dir === "down" ? { x: 0, y: 1 } :
+                dir === "left" ? { x: -1, y: 0 } : { x: 1, y: 0 };
+  }
 }
 
 document.addEventListener("keydown", e => {
-  if (e.key === "ArrowUp") changeDirection("up");
-  if (e.key === "ArrowDown") changeDirection("down");
   if (e.key === "ArrowLeft") changeDirection("left");
   if (e.key === "ArrowRight") changeDirection("right");
+  if (e.key === "ArrowUp") changeDirection("up");
+  if (e.key === "ArrowDown") changeDirection("down");
 });
 
 startBtn.addEventListener("click", () => {
@@ -76,9 +83,12 @@ startBtn.addEventListener("click", () => {
   randomFood();
   drawBoard();
   gameOver.classList.add("hidden");
+  restartBtn.classList.add("hidden");
   interval = setInterval(moveSnake, 200); // Snake speed
 });
 
 restartBtn.addEventListener("click", () => {
   startBtn.click();
 });
+
+randomFood();
